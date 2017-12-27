@@ -1,4 +1,3 @@
-import com.sun.tools.javac.util.ArrayUtils;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -80,8 +79,12 @@ public class SatisfiabilityProblem {
             Relation relation1 = new Relation(nbpClause.boundary1Id, nbpClause.bannedId);
             Relation relation2 = new Relation(nbpClause.bannedId, nbpClause.boundary2Id);
             // look up their ids
-            int relation1Id = relationId.get(relation1);
-            int relation2Id = relationId.get(relation2);
+            Integer testId1 = relationId.get(relation1);
+            Integer testId2 = relationId.get(relation2);
+            // If the same name appears twice, the clause is meaningless. Ignore.
+            if (testId1 == null || testId2 == null) continue;
+            int relation1Id = testId1;
+            int relation2Id = testId2;
             // see if they are the inverted versions
             relation1Id = relation1.flipped ? -relation1Id : relation1Id;
             relation2Id = relation2.flipped ? -relation2Id : relation2Id;
